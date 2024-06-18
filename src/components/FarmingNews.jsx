@@ -12,10 +12,10 @@ const NewsCard = ({ article }) => (
         </Text>
         <Text fontSize="md">{article.description}</Text>
         <Text fontSize="sm" color="gray.500">
-          {new Date(article.publishedAt).toDateString()}
+          {new Date(article.published_at).toDateString()}
         </Text>
         <Text fontSize="sm" color="gray.500">
-          Source: {article.source.name}
+          Source: {article.source}
         </Text>
       </Stack>
     </a>
@@ -28,13 +28,12 @@ const FarmingNews = () => {
   useEffect(() => {
     const fetchNews = async () => {
       const apiKey = import.meta.env.VITE_NEWS_API_KEY;
-      const today = new Date().toISOString().slice(0, 10);
-      const url = `https://newsapi.org/v2/everything?q=farming India agriculture&from=2024-06-12&to=${today}&sortBy=popularity&apiKey=${apiKey}`;
+      const url = `https://api.thenewsapi.com/v1/news/all?api_token=${apiKey}&search=India+farming+agriculture`;
 
       try {
         const response = await axios.get(url);
         if (response.status === 200) {
-          setArticles(response.data.articles);
+          setArticles(response.data.data);
         } else {
           console.error('Failed to fetch news:', response.statusText);
         }
@@ -67,13 +66,12 @@ NewsCard.propTypes = {
   article: PropTypes.shape({
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    publishedAt: PropTypes.string.isRequired,
-    source: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-    }).isRequired,
+    published_at: PropTypes.string.isRequired,
+    source: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
   }).isRequired,
 };
 
 export default FarmingNews;
+
 
