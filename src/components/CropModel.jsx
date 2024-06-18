@@ -40,7 +40,7 @@ const CropModel = () => {
         }
 
         try {
-            const response = await axios.post('https://crop-predict-api.vercel.app/predict', conditions);
+            const response = await axios.post('http://127.0.0.1:5000/predict', conditions);
             setRecommendedCrop(response.data.recommended_crop);
             toast({
                 title: "Success",
