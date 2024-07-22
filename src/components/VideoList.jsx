@@ -64,7 +64,7 @@ const VideoList = () => {
   }, []);
 
   if (loading) {
-    return <Spinner size="xl" />;
+    return <Spinner size="xl" mt={[250]} ml={[700]} justify="center" align="center" />;
   }
 
   if (error) {
