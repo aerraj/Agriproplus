@@ -29,9 +29,13 @@ function Schemes() {
 
   if (loading) {
     return (
-      <Flex justify="center" align="center" height="100vh">
+      <>
+      <Navbar />
+      <Flex justify="center" align="center" height="100vh" width="200vh">
         <Spinner size="xl" />
       </Flex>
+        <Footer />
+        </>
     );
   }
 
