@@ -19,7 +19,7 @@ import {
             <Icon as={FiMapPin} boxSize={12} color="teal.500" />
             <Text fontSize="xl" fontWeight="bold" mb={4}>Postal Address</Text>
             <Text fontWeight="bold">
-              MediKart Headquarters
+              AgriProPlus Headquarters
               <br />
               Plot No. FA7, Zone P1,
               <br />
