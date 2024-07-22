@@ -28,8 +28,7 @@ const FarmingNews = () => {
   useEffect(() => {
     const fetchNews = async () => {
       const apiKey = import.meta.env.VITE_NEWS_API_KEY;
-      const today = new Date().toISOString().slice(0, 10);
-      const url = `https://newsapi.org/v2/everything?q=farming India agriculture&from=2024-06-12&to=${today}&sortBy=popularity&apiKey=${apiKey}`;
+      const url = `https://gnews.io/api/v4/search?q=farming&lang=in&country=in&max=10&apikey=${apiKey}`;
 
       try {
         const response = await axios.get(url);
@@ -66,7 +65,7 @@ const FarmingNews = () => {
 NewsCard.propTypes = {
   article: PropTypes.shape({
     title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    description: PropTypes.string,
     publishedAt: PropTypes.string.isRequired,
     source: PropTypes.shape({
       name: PropTypes.string.isRequired,
@@ -76,4 +75,5 @@ NewsCard.propTypes = {
 };
 
 export default FarmingNews;
+
 
