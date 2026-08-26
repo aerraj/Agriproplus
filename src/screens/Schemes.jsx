@@ -11,10 +11,19 @@ export default function Schemes() {
 
   useEffect(() => {
     let active = true;
-    api.schemes().then((payload) => {
-      const items = Array.isArray(payload) ? payload : payload.items;
-      if (active && items?.length) { setSchemes(items); setSource("live"); }
-    }).catch(() => {}).finally(() => active && setLoading(false));
+    async function loadSchemes() {
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        try {
+          const payload = await api.schemes();
+          const items = Array.isArray(payload) ? payload : payload.items;
+          if (active && items?.length) { setSchemes(items); setSource("live"); }
+          return;
+        } catch {
+          if (attempt === 0) await new Promise((resolve) => setTimeout(resolve, 700));
+        }
+      }
+    }
+    loadSchemes().finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, []);
 
