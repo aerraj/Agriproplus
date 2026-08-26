@@ -1,28 +1,27 @@
-// import React from 'react'
-import { Box, Text } from '@chakra-ui/react'
-import { Link } from "react-router-dom"
-const Footer = () => {
+import { Link } from "react-router-dom";
+import Brand from "./Brand";
+
+export default function Footer() {
   return (
-    <Box
-      as="footer"
-      bg="white"
-      color="black"
-      py={4}
-      textAlign="center"
-      borderTop="1px solid #e2e8f0"  // light gray border on top
-      bottom={0}
-      left={0}
-      right={0}
-      zIndex={10}
-      width="100%"
-      position={'fixed'}
-    >
-      <Text fontSize="sm">
-        Built with ❤️ for 100+ million farmers across India <span><Link to="/">&copy; 2024 Agripro+</Link></span>
-      </Text>
-
-    </Box>
-  )
+    <footer className="footer">
+      <div className="shell footer__grid">
+        <div>
+          <Brand compact />
+          <p>Practical intelligence for every field, from soil reading to market decision.</p>
+        </div>
+        <div>
+          <span className="footer__label">Platform</span>
+          <Link to="/crops">Crop AI</Link><Link to="/schemes">Schemes</Link><Link to="/knowledge">Knowledge</Link>
+        </div>
+        <div>
+          <span className="footer__label">Support</span>
+          <Link to="/support">Talk to us</Link>
+          <a href="https://agmarknet.gov.in/" target="_blank" rel="noreferrer">Mandi prices</a>
+          <a href="https://mausam.imd.gov.in/" target="_blank" rel="noreferrer">Weather</a>
+        </div>
+        <div className="footer__mission"><span>Built in India</span><strong>For the people who feed it.</strong></div>
+      </div>
+      <div className="shell footer__bottom"><span>© 2026 AgriPro+</span><span>Decision support, not a substitute for local agronomic advice.</span></div>
+    </footer>
+  );
 }
-
-export default Footer

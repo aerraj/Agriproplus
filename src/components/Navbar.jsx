@@ -1,131 +1,55 @@
-import PropTypes from 'prop-types';
-import { Link ,useNavigate} from 'react-router-dom';
-import {
-  Box,
-  Flex,
-  HStack,
-  Text,
-  IconButton,
-  Button,
-  useDisclosure,
-  useColorModeValue,
-} from '@chakra-ui/react';
-import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import { useAuth } from '../context/AuthContext'; // Adjust the path as per your project structure
+import { useState } from "react";
+import { LuLogOut, LuMenu, LuSparkles, LuX } from "react-icons/lu";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import Brand from "./Brand";
 
-const NavLink = ({ children, href }) => {
- 
-  return (
-    <Box
-      as={Link}
-      to={href}
-      px={2}
-      py={1}
-      rounded={'md'}
-      _hover={{
-        textDecoration: 'none',
-        bg: useColorModeValue('green.200', 'green.700'),
-      }}
-    >
-      {children}
-    </Box>
-  );
-};
-
-NavLink.propTypes = {
-  children: PropTypes.node.isRequired,
-  href: PropTypes.string.isRequired,
-};
+const links = [["/crops", "Crop AI"], ["/schemes", "Schemes"], ["/knowledge", "Knowledge"], ["/support", "Support"]];
 
 export default function Navbar() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [open, setOpen] = useState(false);
   const { currentUser, logout } = useAuth();
-  let navigate = useNavigate();
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/login');
-    } catch (error) {
-      console.error('Failed to log out:', error);
-    }
-  };
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    await logout();
+    setOpen(false);
+    navigate("/");
+  }
 
   return (
-    <>
-      <Box bg={useColorModeValue('green.500', 'green.900')} w="100%" position={'fixed'} top={0} left={0} right={0} zIndex={1}>
-        <Flex h={16} alignItems={'center'} justifyContent={'space-between'} maxW="1200px" mx="auto" px={4}>
-          <IconButton
-            size={'md'}
-            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-            aria-label={'Open Menu'}
-            display={{ md: 'none' }}
-            onClick={isOpen ? onClose : onOpen}
-          />
-          <HStack spacing={8} alignItems={'center'}>
-            <Text color="white" fontSize="lg" fontWeight="bold">
-              <Link to="/">
-                Agripro+
-              </Link>
-            </Text>
-            {currentUser && (
+    <header className="site-header">
+      <nav className="nav shell" aria-label="Primary navigation">
+        <Brand compact />
+        <button className="nav__toggle" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-label="Toggle navigation">
+          {open ? <LuX /> : <LuMenu />}
+        </button>
+        <div className={`nav__panel ${open ? "is-open" : ""}`}>
+          <div className="nav__links">
+            {links.map(([to, label]) => (
+              <NavLink key={to} to={to} onClick={() => setOpen(false)} className={({ isActive }) => (isActive ? "is-active" : "")}>
+                {label}
+              </NavLink>
+            ))}
+          </div>
+          <div className="nav__actions">
+            {currentUser ? (
               <>
-                <NavLink href="/crops">Crops</NavLink>
-                <NavLink href="/schemes">Schemes</NavLink>
-                <NavLink href="/news">News</NavLink>
-                <NavLink href="/library">Library</NavLink>
-                <NavLink href="/support">Support</NavLink>
+                <Link className="user-chip" to="/crops" onClick={() => setOpen(false)}>
+                  {currentUser.photoURL ? <img src={currentUser.photoURL} alt="" referrerPolicy="no-referrer" /> : <span>{(currentUser.displayName || currentUser.email || "F")[0].toUpperCase()}</span>}
+                  <span>{currentUser.displayName?.split(" ")[0] || "My field"}</span>
+                </Link>
+                <button className="icon-action" onClick={handleLogout} aria-label="Sign out"><LuLogOut /></button>
+              </>
+            ) : (
+              <>
+                <Link className="text-action" to="/login" onClick={() => setOpen(false)}>Sign in</Link>
+                <Link className="button button--small button--lime" to="/signup" onClick={() => setOpen(false)}><LuSparkles /> Get started</Link>
               </>
             )}
-          </HStack>
-          <Flex alignItems={'center'}>
-            <HStack spacing={4}>
-              {currentUser ? (
-                <Button
-                  fontSize={'sm'}
-                  fontWeight={600}
-                  color={'white'}
-                  bg={'green.700'}
-                  _hover={{
-                    bg: 'green.600',
-                  }}
-                  onClick={handleLogout}
-                >
-                  Log Out
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    as={Link}
-                    to="/login"
-                    fontSize={'sm'}
-                    fontWeight={400}
-                    variant={'link'}
-                    color={'white'}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    Log In
-                  </Button>
-                  <Button
-                    as={Link}
-                    to="/signup"
-                    fontSize={'sm'}
-                    fontWeight={600}
-                    color={'white'}
-                    bg={'green.700'}
-                    _hover={{
-                      bg: 'green.600',
-                    }}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    Sign Up
-                  </Button>
-                </>
-              )}
-            </HStack>
-          </Flex>
-        </Flex>
-      </Box>
-    </>
+          </div>
+        </div>
+      </nav>
+    </header>
   );
 }
-

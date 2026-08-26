@@ -1,36 +1,49 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '../firebase/firebase'; // Adjust the path as per your project structure
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
+import { auth, googleProvider } from "../firebase/firebase";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("useAuth must be used inside AuthProvider");
+  return context;
 }
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [authReady, setAuthReady] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
+  useEffect(
+    () => onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
-    });
-    return unsubscribe;
-  }, []);
+      setAuthReady(true);
+    }),
+    []
+  );
 
-  const logout = () => {
-    return signOut(auth);
-  };
-
-  const value = {
-    currentUser,
-    logout,
-  };
+  const value = useMemo(
+    () => ({
+      currentUser,
+      authReady,
+      signInWithGoogle: () => signInWithPopup(auth, googleProvider),
+      signInWithEmail: (email, password) => signInWithEmailAndPassword(auth, email, password),
+      createAccount: async (name, email, password) => {
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
+        if (name.trim()) await updateProfile(credential.user, { displayName: name.trim() });
+        return credential;
+      },
+      logout: () => signOut(auth),
+    }),
+    [authReady, currentUser]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
-
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-};
