@@ -1,4 +1,4 @@
-const API_ROOT = (import.meta.env.VITE_API_URL || "https://agriproplus-server.vercel.app/api").replace(/\/$/, "");
+const API_ROOT = (import.meta.env.VITE_API_URL || "/api").replace(/\/$/, "");
 
 async function request(path, options = {}) {
   const controller = new AbortController();
