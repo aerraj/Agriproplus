@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/api/:path*", "destination": "https://agriproplus-server.vercel.app/api/:path*" },
+    { "source": "/__/auth/:path*", "destination": "https://agripro-36af0.firebaseapp.com/__/auth/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
