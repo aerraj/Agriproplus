@@ -16,6 +16,8 @@ export default function Footer() {
         <div>
           <span className="footer__label">Support</span>
           <Link to="/support">Talk to us</Link>
+          <Link to="/privacy">Privacy</Link>
+          <Link to="/terms">Terms</Link>
           <a href="https://agmarknet.gov.in/" target="_blank" rel="noreferrer">Mandi prices</a>
           <a href="https://mausam.imd.gov.in/" target="_blank" rel="noreferrer">Weather</a>
         </div>

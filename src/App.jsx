@@ -9,6 +9,7 @@ const CropRecommendation = lazy(() => import("./screens/CropRecommendation"));
 const Schemes = lazy(() => import("./screens/Schemes"));
 const Knowledge = lazy(() => import("./screens/Knowledge"));
 const Support = lazy(() => import("./screens/Support"));
+const Legal = lazy(() => import("./screens/Legal"));
 const NotFound = lazy(() => import("./screens/NotFound"));
 
 function ScrollToTop() {
@@ -37,6 +38,8 @@ export default function App() {
           <Route path="/news" element={<Navigate to="/knowledge" replace />} />
           <Route path="/library" element={<Navigate to="/knowledge" replace />} />
           <Route path="/support" element={<Support />} />
+          <Route path="/privacy" element={<Legal type="privacy" />} />
+          <Route path="/terms" element={<Legal type="terms" />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
